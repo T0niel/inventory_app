@@ -15,6 +15,6 @@
   </head>
   <body>
     <%- include('partials/nav.ejs', {links: [{link: '/inventory/create', text: 'Create'}]})  %>
-    <h1>Hello</h1>
+    <%- include('partials/categories.ejs', {categories: ['engines', 'transmissions', 'brakes', 'suspension', 'tires', 'batteries', 'alternators', 'radiators', 'fuel pumps', 'exhaust systems'], selected: 'engines'}) %>
   </body>
 </html>

@@ -1,48 +1,85 @@
 :root {
   --primary-bg-clr: #f9f7f7;
   --secondary-bg-clr: #3f72af;
-  --secondary-text-clr: #dbe2ef;
+  --secondary-text-clr: #e9ecf2;
   --primary-text-cl: #112d4e;
-  font-family: "Poppins", serif;
+  font-family: 'Poppins', serif;
 }
 
-body{
-    padding: 0 1rem;
+body {
+  padding: 0 1rem;
 }
 
-.nav{
-    padding: 1rem 0;
-    font-weight: 600;
-    display: flex;
-    gap: 1rem;
+.nav {
+  padding: 1rem 0;
+  font-weight: 600;
+  display: flex;
+  gap: 1rem;
 }
 
-.nav-item a{
-    text-decoration: none;
-    color: var(--primary-text-cl);
-    opacity: 0.8;
-    position: relative;
+.nav-item a {
+  text-decoration: none;
+  color: var(--primary-text-cl);
+  opacity: 0.8;
+  position: relative;
 }
 
+.nav-item a::before {
+  content: '';
+  position: absolute;
+  background-color: var(--secondary-bg-clr);
+  bottom: 0;
+  width: 100%;
+  transition-timing-function: ease-out;
+  transition-duration: 200ms;
+  transform-origin: left;
 
-.nav-item a::before{
-    content: '';
-    position: absolute;
-    background-color: var(--secondary-bg-clr);
-    bottom: 0;
-    width: 100%;
-    transition-timing-function: ease-out;
-    transition-duration: 200ms;
-    transform-origin: left;
-
-    transform: scaleX(0);
+  transform: scaleX(0);
 }
 
-.nav-item a:hover{
-    opacity: 1;
+.nav-item a:hover {
+  opacity: 1;
 }
 
-a:hover::before{
-    height: 2px;
-    transform: scaleX(1);
+a:hover::before {
+  height: 2px;
+  transform: scaleX(1);
+}
+
+.categories-container {
+  padding: 0.5rem;
+  border-radius: 5px;
+  overflow-x: auto;
+  background-color: var(--secondary-text-clr);
+}
+
+.categories {
+  display: flex;
+  gap: 1rem;
+}
+
+.categories-item {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: var(--primary-bg-clr);
+  opacity: 0.8;
+}
+
+.categories-item a {
+  width: max-content;
+  display: inline-block;
+  text-decoration: none;
+  color: var(--primary-text-cl);
+}
+
+.selected-category-item {
+  background-color: var(--secondary-bg-clr);
+}
+
+.selected-category-item a {
+  color: var(--secondary-text-clr);
+}
+
+.categories-item:hover{
+  opacity: 1;
 }
