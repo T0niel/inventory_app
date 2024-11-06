@@ -2,7 +2,7 @@
   <ul class="categories">
     <% categories.forEach((category) => { %>
       <li class="categories-item <%= locals.selected && locals.selected === category ? 'selected-category-item' : '' %>">
-        <a href="<%=category%>"><%= category %></a>
+        <a href="/?category=<%=category%>"><%= category %></a>
       </li>
     <% }) %>
   </ul>

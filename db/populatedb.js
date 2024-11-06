@@ -71,7 +71,7 @@ const SQL = `
             creation_date
         )
     VALUES (
-        'engine-images/BMW-B38.png',
+        'engine-images/BMW-B38.webp',
         '2024-11-6'
     );
   
