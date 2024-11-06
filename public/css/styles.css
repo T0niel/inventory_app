@@ -142,3 +142,16 @@ a:hover::before {
   font-weight: 200;
   font-size: small;
 }
+
+.no-items{
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-items-header{
+  font-size: 2rem;
+  font-weight: bold;
+}

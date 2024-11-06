@@ -6,7 +6,7 @@ async function renderIndex(req, res) {
     const categories = await getCategories();
 
     if (categories.length === 0) {
-      return res.render('error', { error: 'No categories are available' });
+      return res.render('index');
     }
 
     if (!category) {
@@ -18,9 +18,9 @@ async function renderIndex(req, res) {
       ...item,
       directory: `images/${item.directory}`,
     }));
-    res.render('index', { categories, selected: category, items});
+    res.render('index', { categories, selected: category, items });
   } catch (e) {
-    res.render('error', {error: 'Internal server error'});
+    res.render('error', { error: 'Internal server error', status: 500 });
   }
 }
 

@@ -14,20 +14,28 @@
     <title>Inventory App</title>
   </head>
   <body>
-    <%- include('partials/nav.ejs', {links: [{link: '/inventory/create', text:
-    'Create'}]}) %> 
-    <%- include('partials/categories.ejs', {categories: locals.categories, selected: locals.selected}) %>
+    <%- include('partials/nav.ejs', { links: [{ link: '/inventory/create', text: 'Create' }] }) %> 
+
+    <% if (locals.categories) { %>
+      <%- include('partials/categories.ejs', { categories: locals.categories, selected: locals.selected }) %>
+    <% } %>
 
     <div class="items-container">
-      <% if(locals.items){ locals.items.forEach(({part_name, description, directory}) => {%>
-      <div class="item">
-        <div class="item-img-container">
-          <img src="<%=directory%>" alt="item" />
+      <% if (locals.items && locals.items.length > 0) { %>
+        <% locals.items.forEach(({ part_name, description, directory }) => { %>
+          <div class="item">
+            <div class="item-img-container">
+              <img src="<%= directory %>" alt="item" />
+            </div>
+            <p class="item-name item-field"><%= part_name %></p>
+            <p class="item-description item-field"><%= description %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="no-items">
+          <h1 class="no-items-header">Could not find any item</h1>
         </div>
-        <p class="item-name item-field"><%= part_name %></p>
-        <p class="item-description item-field"><%= description %></p>
-      </div>
-      <%}) } %>
+      <% } %>
     </div>
   </body>
 </html>

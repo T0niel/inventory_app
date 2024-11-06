@@ -15,7 +15,7 @@ async function getItems(category){
                     ON cc.id = p.car_part_category_id
                     INNER JOIN images i
                     ON c.image_id = i.id
-                    WHERE cc.category_name = $1;`;
+                    WHERE cc.category_name LIKE $1;`;
 
     const {rows} = await pool.query(query, [category]);
     return rows;
