@@ -1,4 +1,5 @@
 const { getCategories, getItems } = require('../db/queries');
+const httpError = require('../errors/httpError');
 
 async function renderIndex(req, res) {
   let { category } = req.query;
@@ -20,7 +21,7 @@ async function renderIndex(req, res) {
     }));
     res.render('index', { categories, selected: category, items });
   } catch (e) {
-    res.render('error', { error: 'Internal server error', status: 500 });
+    throw new httpError('Internal server error', 500);
   }
 }
 
