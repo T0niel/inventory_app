@@ -14,7 +14,20 @@
     <title>Inventory App</title>
   </head>
   <body>
-    <%- include('partials/nav.ejs', {links: [{link: '/inventory/create', text: 'Create'}]})  %>
-    <%- include('partials/categories.ejs', {categories: ['engines', 'transmissions', 'brakes', 'suspension', 'tires', 'batteries', 'alternators', 'radiators', 'fuel pumps', 'exhaust systems'], selected: 'engines'}) %>
+    <%- include('partials/nav.ejs', {links: [{link: '/inventory/create', text:
+    'Create'}]}) %> 
+    <%- include('partials/categories.ejs', {categories: locals.categories, selected: locals.selected}) %>
+
+    <div class="items-container">
+      <% if(locals.items){ locals.items.forEach(({name, description}) => {%>
+      <div class="item">
+        <div class="item-img-container">
+          <img src="https://placehold.co/600x400" alt="item" />
+        </div>
+        <p class="item-name item-field"><%= name %></p>
+        <p class="item-description item-field"><%= description %></p>
+      </div>
+      <%}) } %>
+    </div>
   </body>
 </html>
