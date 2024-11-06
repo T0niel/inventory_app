@@ -97,19 +97,12 @@ a:hover::before {
 }
 
 .item {
-  cursor: pointer;
   width: 200px;
-  height: 205px;
   background-color: var(--primary-bg-clr);
   --border-radius: 0.3rem;
   box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.1);
-  opacity: 0.9;
-  padding: 0.2rem;
+  padding: .5rem;
   border-radius: var(--border-radius);
-}
-
-.item:hover {
-  opacity: 1;
 }
 
 .item-img-container {
@@ -136,6 +129,7 @@ a:hover::before {
 
 .item-description {
   height: 30px;
+  margin-left: .5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -148,10 +142,38 @@ a:hover::before {
   min-height: 80vh;
   display: flex;
   justify-content: center;
+
   align-items: center;
 }
 
 .no-items-header{
   font-size: 2rem;
   font-weight: bold;
+}
+
+.icons-container{
+  display: flex;
+  gap: .5rem;
+  width: 60%;
+}
+
+.icon-wrapper{
+  width: 15px;
+  cursor: pointer;
+}
+
+.icon-wrapper img{
+  width: 100%;
+  height: auto;
+}
+
+.additions{
+  display: flex;
+}
+
+.view-details{
+  cursor: pointer;
+  width: 40%;
+  font-weight: 200;
+  font-size: small;
 }
