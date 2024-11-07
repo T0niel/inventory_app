@@ -22,7 +22,11 @@ app.use('/', (req, res) => {
 })
 
 app.use((err, req, res, next) => {
-    const {status, message} = err;
+    let {status, message} = err;
+    if(!status){
+        status = 500;
+        message = 'Internal server error';
+    }
     res.render('error', {status, error: message})
 })
 

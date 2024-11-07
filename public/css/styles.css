@@ -9,14 +9,13 @@
 body {
   padding: 0 1rem;
   box-sizing: border-box;
-
+  color: var(--primary-text-cl);
 }
 
 .nav {
   padding: 1rem 0;
   font-weight: 600;
   display: flex;
-  gap: 1rem;
 }
 
 .nav-item a {
@@ -24,6 +23,12 @@ body {
   color: var(--primary-text-cl);
   opacity: 0.8;
   position: relative;
+}
+
+.nav-list{
+  display: flex;
+  gap: 1rem;
+
 }
 
 .nav-item a::before {
@@ -174,6 +179,195 @@ a:hover::before {
 .view-details{
   cursor: pointer;
   width: 40%;
-  font-weight: 200;
+  font-weight: 300;
   font-size: small;
+}
+
+.view-details a{
+  text-decoration: none;
+  color: var(--primary-text-cl);
+}
+
+.create-item-header{
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 10px;
+}
+
+.create-item-categories-wrapper .categories-container{
+  width: 70%;
+  height: auto;
+  overflow-x: inherit;
+  margin: auto;
+}
+
+.create-item-categories-wrapper .categories{
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.inputs{
+  width: 70%;
+  margin: auto;
+  margin-top: 4rem;
+}
+
+.input-wrapper{
+  display: flex;
+  flex-direction: column;
+  padding: .5rem;
+  width: 400px;
+}
+
+.input-wrapper label{
+  margin-bottom: 1rem;
+}
+
+input[type="file"] {
+  outline: none;
+  padding: 4px;
+}
+
+input[type="file"]:focus-within::file-selector-button,
+input[type="file"]:focus::file-selector-button {
+  outline: 2px solid #0964b0;
+  outline-offset: 2px;
+}
+
+input[type="file"]::before {
+  top: 16px;
+}
+
+input[type="file"]::after {
+  top: 14px;
+}
+
+
+input[type="file"] {
+  position: relative;
+}
+
+input[type="file"]::file-selector-button {
+  width: 136px;
+  color: transparent;
+}
+
+input[type="file"]::before {
+  position: absolute;
+  pointer-events: none;
+  left: 40px;
+  color: #0964b0;
+  content: "Upload File";
+}
+
+input[type="file"]::after {
+  position: absolute;
+  pointer-events: none;
+  left: 16px;
+  height: 20px;
+  width: 20px;
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230964B0'%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z'/%3E%3C/svg%3E");
+}
+
+.inputs{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-wrapper input:not([type='file']){
+  padding: .5rem;
+  width: 300px;
+  border: 0px;
+  border-bottom: 2px solid var(--secondary-text-clr);
+}
+
+.input-wrapper select{
+  width: 320px;
+  padding: .5rem;
+}
+
+input{
+  opacity: 0.9;
+}
+
+input:hover{
+  opacity: 1;
+}
+
+label{
+  font-size: small;
+}
+
+.submit{
+  width: 80%;
+  background-color: seagreen;
+  color: var(--secondary-text-clr);
+  border: none;
+  display: block;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.9;
+  padding: .5rem 1rem;
+}
+
+.submit:hover{
+  opacity: 1;
+}
+
+form{
+  margin-bottom: 1rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+input[type="file"] {
+  outline: none;
+  padding: 4px;
+  margin: -4px;
+}
+
+
+input[type="file"]::file-selector-button {
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 40px;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+  margin-right: 16px;
+  transition: background-color 200ms;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #f3f4f6;
+}
+
+input[type="file"]::file-selector-button:active {
+  background-color: #e5e7eb;
 }

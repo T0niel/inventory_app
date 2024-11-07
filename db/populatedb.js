@@ -32,20 +32,6 @@ const SQL = `
         PRIMARY KEY (car_part_category_id, car_part_id)
     );
 
-    CREATE TABLE IF NOT EXISTS cars (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        name VARCHAR(100) NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS car_part_cars_pivot (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        car_part_id BIGINT NOT NULL,
-        car_id BIGINT NOT NULL,
-  
-        FOREIGN KEY (car_part_id) REFERENCES car_parts(id),
-        FOREIGN KEY (car_id) REFERENCES cars(id)
-    );
-
     CREATE TABLE IF NOT EXISTS car_part_producers (
         id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         company_name VARCHAR(50) UNIQUE

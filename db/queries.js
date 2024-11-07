@@ -7,7 +7,7 @@ async function getCategories(){
 }
 
 async function getItems(category){
-    const query = `SELECT c.part_name, c.description, i.directory FROM car_part_category_pivot p 
+    const query = `SELECT c.id, c.part_name, c.description, i.directory FROM car_part_category_pivot p 
                     INNER JOIN
                     car_parts c 
                     ON c.id = p.car_part_id 
