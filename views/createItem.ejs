@@ -19,7 +19,7 @@
     '/inventory/createCategory', text: 'Create category', }] }) %>
     <h1 class="create-item-header">Create item</h1>
     <form
-      action="/create"
+      action="createItem"
       method="POST"
       accept=".jpg, .jpeg, .png, .bmp, .svg, .webp"
       novalidate
@@ -81,7 +81,13 @@
           <label for="password">Admin Password:*</label>
           <input type="password" name="password" id="password" />
         </div>
+        <input style="display: none;" type="text" name="category" value="<%=locals.selected%>">
         <div class="input-wrapper">
+          <ul class="error-list">
+            <% if(locals.errors){ locals.errors.forEach((error) => {%>
+            <li class="error">- <%=error.msg%></li>
+            <%}) } %>
+          </ul>
           <button type="submit" class="submit">Submit</button>
         </div>
       </div>

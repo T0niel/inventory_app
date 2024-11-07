@@ -10,6 +10,8 @@ body {
   padding: 0 1rem;
   box-sizing: border-box;
   color: var(--primary-text-cl);
+  max-width: 1854px;
+  margin: auto;
 }
 
 .nav {
@@ -220,7 +222,7 @@ a:hover::before {
   display: flex;
   flex-direction: column;
   padding: .5rem;
-  width: 400px;
+  width: 500px;
 }
 
 .input-wrapper label{
@@ -282,13 +284,12 @@ input[type="file"]::after {
 
 .input-wrapper input:not([type='file']){
   padding: .5rem;
-  width: 300px;
   border: 0px;
   border-bottom: 2px solid var(--secondary-text-clr);
 }
 
 .input-wrapper select{
-  width: 320px;
+  width: 100%;
   padding: .5rem;
 }
 
@@ -305,7 +306,6 @@ label{
 }
 
 .submit{
-  width: 80%;
   background-color: seagreen;
   color: var(--secondary-text-clr);
   border: none;
@@ -323,27 +323,6 @@ label{
 form{
   margin-bottom: 1rem;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 input[type="file"] {
   outline: none;
@@ -370,4 +349,24 @@ input[type="file"]::file-selector-button:hover {
 
 input[type="file"]::file-selector-button:active {
   background-color: #e5e7eb;
+}
+
+.error{
+  margin-left: 10px;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  color: crimson;
+}
+
+@media screen and (max-width: 425px) {
+  .input-wrapper, .inputs{
+    width: 100%;
+  }
+  .nav-list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto;
+  }
 }
