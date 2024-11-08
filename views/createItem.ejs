@@ -19,7 +19,7 @@
     '/inventory/createCategory', text: 'Create category', }] }) %>
     <h1 class="create-item-header">Create item</h1>
     <form
-      action="createItem"
+      action="/inventory/createItem"
       method="POST"
       enctype="multipart/form-data"
       novalidate
@@ -72,9 +72,15 @@
         <div class="input-wrapper">
           <label for="price">Company:*</label>
           <select name="company" id="company">
-            <option value="merecdes">Mercedes</option>
-            <option value="bmw">BMW</option>
-            <option value="other">Other</option>
+            <option value="Bmw">BMW</option>
+            <option value="Mercedes-benz">Mercedes-Benz</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Ford">Ford</option>
+            <option value="Bosch">Bosch</option>
+            <option value="Continental">Continental</option>
+            <option value="Denso">Denso</option>
+            <option value="General-motors">General Motors</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <div class="input-wrapper">
@@ -89,7 +95,13 @@
         />
         <div class="input-wrapper">
           <label for="description">description: (optional)</label>
-          <textarea name="description" id="description" placeholder="description" spellcheck="true" class="description"></textarea>
+          <textarea
+            name="description"
+            id="description"
+            placeholder="description"
+            spellcheck="true"
+            class="description"
+          ></textarea>
         </div>
         <div class="input-wrapper">
           <ul class="error-list">
@@ -97,9 +109,8 @@
             <li class="error">- <%=error.msg%></li>
             <%}) } %>
           </ul>
-          <button type="submit" class="submit" >Submit</button>
+          <button type="submit" class="submit">Submit</button>
         </div>
-        
       </div>
     </form>
   </body>

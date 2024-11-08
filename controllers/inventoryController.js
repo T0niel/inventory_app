@@ -1,4 +1,4 @@
-const { getCategories } = require('../db/queries');
+const { getCategories, insertItem } = require('../db/queries');
 const { body, validationResult } = require('express-validator');
 const HttpError = require('../errors/httpError');
 const isAdmin = require('../middlewares/isAdmin');
@@ -10,11 +10,11 @@ const uploadDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir); 
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const fileName = Date.now() + path.extname(file.originalname); 
-    cb(null, fileName); 
+    const fileName = Date.now() + path.extname(file.originalname);
+    cb(null, fileName);
   },
 });
 
@@ -47,14 +47,27 @@ const itemSchemaInput = [
     .isNumeric({ no_symbols: true })
     .withMessage('the price should be a number with no symbols'),
   body('company')
-    .isIn(['mercedes', 'bmw'])
+    .toLowerCase()
+    .isIn([
+      'bosch',
+      'continental',
+      'denso',
+      'bmw',
+      'mercedes-benz',
+      'toyota',
+      'ford',
+      'general motors',
+      'other',
+    ])
     .withMessage('the company should be one of the supported companies'),
   body('password')
     .notEmpty()
-    .escape()
-    .withMessage('the admin authenitcation is required'),
+    .withMessage('the admin authentication is required')
+    .matches(process.env.ADMIN_PASSWORD)
+    .withMessage('Invalid password')
+    .escape(),
   body('category').notEmpty().withMessage('the category is required'),
-  body('descrition').optional({values: 'falsy'})
+  body('descrition').optional({ values: 'falsy' }),
 ];
 
 async function getCreateForm(req, res) {
@@ -80,7 +93,7 @@ async function validateItem(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     //delete the image in case the form was invalid
-    if (req.file.filename) {
+    if (req.file?.filename) {
       fs.rm(path.join(uploadDir, req.file.filename));
     }
     let { category } = req.query;
@@ -104,9 +117,29 @@ async function validateItem(req, res, next) {
   next();
 }
 
-
 async function createItem(req, res) {
-
+  const now = new Date();
+  const data = req.body;
+  const {
+    name,
+    date,
+    price,
+    company,
+    password,
+    category,
+    description,
+    imgDir,
+  } = { ...data, imgDir: path.join('uploads', req.file.filename) };
+  await insertItem(
+    name,
+    date,
+    price,
+    company,
+    imgDir,
+    now,
+    category,
+    description
+  );
   res.redirect('/');
 }
 

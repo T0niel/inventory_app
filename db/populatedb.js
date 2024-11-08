@@ -44,34 +44,6 @@ const SQL = `
     );
 
     -- Dummy data
-    INSERT INTO
-        car_part_producers (
-            company_name
-        )
-    VALUES
-        ('BNW');
-
-    INSERT INTO 
-	    images (
-            directory,
-            creation_date
-        )
-    VALUES (
-        'engine-images/BMW-B38.webp',
-        '2024-11-6'
-    );
-  
-    INSERT INTO
-        car_parts (
-        part_name,
-        production_date,
-        description,
-        price,
-        car_part_producer_id,
-        image_id
-    )
-    VALUES
-        ('BMW B38', '2013-01-01', 'BMW engine', 200, 1, 1);
 
     INSERT INTO
         car_part_categories(
@@ -88,14 +60,6 @@ const SQL = `
         ('Cooling System'),
         ('Interior'),
         ('Exterior');
-    
-    INSERT INTO 
-		car_part_category_pivot(
-            car_part_category_id,
-            car_part_id
-        )
-    VALUES
- 		(1, 1);
 `;
 
 async function init(){
