@@ -1,29 +1,44 @@
 const { getCategories } = require('../db/queries');
 const { body, validationResult } = require('express-validator');
 const HttpError = require('../errors/httpError');
+const isAdmin = require('../middlewares/isAdmin');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs/promises');
+
+const uploadDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir); 
+  },
+  filename: (req, file, cb) => {
+    const fileName = Date.now() + path.extname(file.originalname); 
+    cb(null, fileName); 
+  },
+});
+
+// Initialize Multer with storage configuration
+const upload = multer({
+  storage: storage,
+});
 
 const itemSchemaInput = [
-  body('file')
-    .custom((value, { req }) => {
-      if (!req.file) {
-        throw new Error('File is required');
-      }
+  body('file').custom((value, { req }) => {
+    if (!req.file) {
+      throw new Error('File is required');
+    }
 
-      const allowedMimeTypes = [
-        'image/jpeg',
-        'image/png',
-        'image/bmp',
-        'image/webp',
-      ];
-      if (!allowedMimeTypes.includes(req.file.mimetype)) {
-        throw new Error(
-          'Invalid file type. Only JPEG, PNG, BMP, and WEBP are allowed.'
-        );
-      }
+    const allowedTypes = ['jpeg', 'png', 'bmp', 'webp'];
 
-      return true;
-    })
-    .withMessage('the image should be with the supported extensions.'),
+    if (!allowedTypes.includes(req.file.originalname.split('.')[1])) {
+      throw new Error(
+        'Invalid file type. Only JPEG, PNG, BMP, and WEBP are allowed.'
+      );
+    }
+
+    return true;
+  }),
   body('name')
     .isLength({ min: 3 })
     .withMessage('the name must be at least be 3 characters'),
@@ -34,8 +49,12 @@ const itemSchemaInput = [
   body('company')
     .isIn(['mercedes', 'bmw'])
     .withMessage('the company should be one of the supported companies'),
-  body('password').notEmpty().escape().withMessage('the admin authenitcation is required'),
-  body('category').notEmpty().withMessage('the category is required')
+  body('password')
+    .notEmpty()
+    .escape()
+    .withMessage('the admin authenitcation is required'),
+  body('category').notEmpty().withMessage('the category is required'),
+  body('descrition').optional({values: 'falsy'})
 ];
 
 async function getCreateForm(req, res) {
@@ -57,9 +76,13 @@ async function getCreateForm(req, res) {
   }
 }
 
-async function createItem(req, res) {
+async function validateItem(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    //delete the image in case the form was invalid
+    if (req.file.filename) {
+      fs.rm(path.join(uploadDir, req.file.filename));
+    }
     let { category } = req.query;
     const categories = await getCategories();
 
@@ -78,10 +101,22 @@ async function createItem(req, res) {
     });
   }
 
-  res.redirect('index');
+  next();
+}
+
+
+async function createItem(req, res) {
+
+  res.redirect('/');
 }
 
 module.exports = {
   getCreateForm,
-  createItem: [itemSchemaInput, createItem],
+  createItem: [
+    upload.single('file'),
+    itemSchemaInput,
+    validateItem,
+    isAdmin,
+    createItem,
+  ],
 };

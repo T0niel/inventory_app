@@ -21,7 +21,7 @@
     <form
       action="createItem"
       method="POST"
-      accept=".jpg, .jpeg, .png, .bmp, .svg, .webp"
+      enctype="multipart/form-data"
       novalidate
     >
       <div class="create-item-categories-wrapper">
@@ -81,15 +81,25 @@
           <label for="password">Admin Password:*</label>
           <input type="password" name="password" id="password" />
         </div>
-        <input style="display: none;" type="text" name="category" value="<%=locals.selected%>">
+        <input
+          style="display: none"
+          type="text"
+          name="category"
+          value="<%=locals.selected%>"
+        />
+        <div class="input-wrapper">
+          <label for="description">description: (optional)</label>
+          <textarea name="description" id="description" placeholder="description" spellcheck="true" class="description"></textarea>
+        </div>
         <div class="input-wrapper">
           <ul class="error-list">
             <% if(locals.errors){ locals.errors.forEach((error) => {%>
             <li class="error">- <%=error.msg%></li>
             <%}) } %>
           </ul>
-          <button type="submit" class="submit">Submit</button>
+          <button type="submit" class="submit" >Submit</button>
         </div>
+        
       </div>
     </form>
   </body>
