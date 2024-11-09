@@ -1,4 +1,10 @@
-const { getCategories, insertItem } = require('../db/queries');
+const {
+  getCategories,
+  insertItem,
+  deleteCarPart,
+  getItemById,
+  deleteImageById,
+} = require('../db/queries');
 const { body, validationResult } = require('express-validator');
 const HttpError = require('../errors/httpError');
 const isAdmin = require('../middlewares/isAdmin');
@@ -70,6 +76,15 @@ const itemSchemaInput = [
   body('descrition').optional({ values: 'falsy' }),
 ];
 
+const deleteItemSchemaInput = [
+  body('password')
+    .notEmpty()
+    .withMessage('the admin authentication is required')
+    .matches(process.env.ADMIN_PASSWORD)
+    .withMessage('Invalid password')
+    .escape(),
+];
+
 async function getCreateForm(req, res) {
   try {
     let { category } = req.query;
@@ -94,7 +109,7 @@ async function validateItem(req, res, next) {
   if (!errors.isEmpty()) {
     //delete the image in case the form was invalid
     if (req.file?.filename) {
-      fs.rm(path.join(uploadDir, req.file.filename));
+      await fs.rm(path.join(uploadDir, req.file.filename));
     }
     let { category } = req.query;
     const categories = await getCategories();
@@ -118,29 +133,61 @@ async function validateItem(req, res, next) {
 }
 
 async function createItem(req, res) {
-  const now = new Date();
-  const data = req.body;
-  const {
-    name,
-    date,
-    price,
-    company,
-    password,
-    category,
-    description,
-    imgDir,
-  } = { ...data, imgDir: path.join('uploads', req.file.filename) };
-  await insertItem(
-    name,
-    date,
-    price,
-    company,
-    imgDir,
-    now,
-    category,
-    description
-  );
-  res.redirect('/');
+  try {
+    const now = new Date();
+    const data = req.body;
+    const { name, date, price, company, category, description, imgDir } = {
+      ...data,
+      imgDir: path.join('uploads', req.file.filename),
+    };
+    await insertItem(
+      name,
+      date,
+      price,
+      company,
+      imgDir,
+      now,
+      category,
+      description
+    );
+    res.redirect('/');
+  } catch (e) {
+    throw new HttpError('Internal server error', 500);
+  }
+}
+
+async function deleteItem(req, res) {
+  try {
+    const id = req.params.id;
+    const item = await getItemById(id);
+    await deleteCarPart(id);
+    await deleteImageById(id);
+    await fs.rm(path.join(uploadDir, path.basename(item.directory)), {
+      force: true,
+    });
+    res.redirect('/');
+  } catch (e) {
+    throw new HttpError('Internal server error', 500);
+  }
+}
+
+async function validateDeleteItem(req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const id = req.params.id;
+
+    return res.render('delete', {
+      id,
+      errors: errors.array(),
+    });
+  }
+
+  next();
+}
+
+async function getDeleteForm(req, res) {
+  const id = req.params.id;
+  res.render('delete', { id });
 }
 
 module.exports = {
@@ -152,4 +199,6 @@ module.exports = {
     isAdmin,
     createItem,
   ],
+  deleteItem: [deleteItemSchemaInput, validateDeleteItem, isAdmin, deleteItem],
+  getDeleteForm,
 };

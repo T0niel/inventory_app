@@ -6,7 +6,7 @@ async function getCategories() {
   return rows.map(({ category_name }) => category_name);
 }
 
-async function getItems(category) {
+async function getItemsByCategory(category) {
   const query = `SELECT c.id, c.part_name, c.description, i.directory FROM car_part_category_pivot p 
                     INNER JOIN
                     car_parts c 
@@ -19,6 +19,28 @@ async function getItems(category) {
 
   const { rows } = await pool.query(query, [category]);
   return rows;
+}
+
+async function getItemById(id) {
+  const query = `SELECT c.id, c.part_name, c.description, i.directory FROM car_part_category_pivot p 
+                    INNER JOIN
+                    car_parts c 
+                    ON c.id = p.car_part_id 
+                    INNER JOIN car_part_categories cc 
+                    ON cc.id = p.car_part_category_id
+                    INNER JOIN images i
+                    ON c.image_id = i.id
+                    WHERE c.id = $1;`;
+  
+  const {rows} = await pool.query(query, [id]);
+  return rows[0]; 
+}
+
+async function deleteImageById(id){
+  const query = `DELETE FROM images WHERE id = $1`;
+
+  await pool.query(query, [id]);
+  return true;
 }
 
 async function getCategoriesByName(categoryName) {
@@ -77,7 +99,7 @@ async function insertCarPart(
     let carPartProducerId = (await getCarPartProducerByName(producer))[0]?.id;
     if (!carPartProducerId) {
       carPartProducerId = await insertCarPartProducer(producer, client);
-    } 
+    }
     const imageId = await insertImage(imageDir, imageCreationDate, client);
 
     const query = `INSERT INTO 
@@ -171,8 +193,20 @@ async function insertItem(
   return carPartId;
 }
 
+async function deleteCarPart(id) {
+  const query = `
+    DELETE FROM car_parts WHERE id = $1
+  `;
+
+  const { rows } = await pool.query(query, [id]);
+  return rows;
+}
+
 module.exports = {
   getCategories,
-  getItems,
+  getItemsByCategory,
   insertItem,
+  deleteCarPart,
+  getItemById,
+  deleteImageById
 };

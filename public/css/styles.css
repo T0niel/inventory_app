@@ -310,6 +310,10 @@ label{
 
 .submit{
   background-color: seagreen;
+}
+
+.delete,
+.submit{
   color: var(--secondary-text-clr);
   border: none;
   display: block;
@@ -377,4 +381,8 @@ input[type="file"]::file-selector-button:active {
 .description{
   resize: none;
   color: var(--primary-text-cl);
+}
+
+.delete{
+  background-color: crimson;
 }
