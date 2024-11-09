@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/styles.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,9 +12,112 @@
       rel="stylesheet"
     />
     <title>Document</title>
-</head>
-<body>
-    <%- include('partials/filledNav.ejs', {}) %> 
-
-</body>
+  </head>
+  <body>
+    <%- include('partials/filledNav.ejs') %>
+    <h1 class="create-item-header">Edit item</h1>
+    <form
+      action="/inventory/edit/<%=item.car_part_id%>?category=<%=locals.selected%>"
+      method="POST"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <div class="create-item-categories-wrapper">
+        <div class="categories-container">
+          <h1 class="category-header">Chose category</h1>
+          <ul class="categories">
+            <% categories.forEach((category) => { %>
+            <li
+              class="categories-item <%= locals.selected && locals.selected === category ? 'selected-category-item' : '' %>"
+            >
+              <a href="/inventory/createItem/?category=<%=category%>"
+                ><%= category %></a
+              >
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+      <div class="inputs">
+        <div class="input-wrapper">
+          <label for="file">Image:*</label>
+          <input type="file" id="file" name="file" required />
+        </div>
+        <div class="input-wrapper">
+          <label for="name">Part name:*</label>
+          <input
+            type="text"
+            placeholder="BMW-32XE"
+            id="name"
+            name="name"
+            value="<%=item.part_name%>"
+            required
+          />
+        </div>
+        <div class="input-wrapper">
+          <label for="date">Production date:*</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value="<%=new Date(item.production_date).toISOString().slice(0, 10)%>"
+            required
+          />
+        </div>
+        <div class="input-wrapper">
+          <label for="price">Price:*</label>
+          <input
+            type="text"
+            placeholder="200"
+            id="price"
+            name="price"
+            value="<%=item.price%>"
+            required
+          />
+        </div>
+        <div class="input-wrapper">
+          <label for="price">Company:*</label>
+          <select name="company" id="company">
+            <option value="Bmw">BMW</option>
+            <option value="Mercedes-benz">Mercedes-Benz</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Ford">Ford</option>
+            <option value="Bosch">Bosch</option>
+            <option value="Continental">Continental</option>
+            <option value="Denso">Denso</option>
+            <option value="General-motors">General Motors</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="input-wrapper">
+          <label for="password">Admin Password:*</label>
+          <input type="password" name="password" id="password" />
+        </div>
+        <input
+          style="display: none"
+          type="text"
+          name="category"
+          value="<%=locals.selected%>"
+        />
+        <div class="input-wrapper">
+          <label for="description">description: (optional)</label>
+          <textarea
+            name="description"
+            id="description"
+            placeholder="description"
+            spellcheck="true"
+            class="description"
+          ><%=item.description%></textarea>
+        </div>
+        <div class="input-wrapper">
+          <ul class="error-list">
+            <% if(locals.errors){ locals.errors.forEach((error) => {%>
+            <li class="error">- <%=error.msg%></li>
+            <%}) } %>
+          </ul>
+          <button type="submit" class="submit">Submit</button>
+        </div>
+      </div>
+    </form>
+  </body>
 </html>
