@@ -42,11 +42,10 @@ const SQL = `
         car_part_category_pivot (
             car_part_category_id BIGINT NOT NULL,
             car_part_id BIGINT NOT NULL,
-            FOREIGN KEY (car_part_category_id) REFERENCES car_part_categories (id),
+            FOREIGN KEY (car_part_category_id) REFERENCES car_part_categories (id) ON DELETE CASCADE,
             FOREIGN KEY (car_part_id) REFERENCES car_parts (id) ON DELETE CASCADE,
-            PRIMARY KEY (car_part_category_id, car_part_id)
+            PRIMARY KEY (car_part_category_id, car_part_id) 
         );
-
 
         -- Dummy data
         INSERT INTO

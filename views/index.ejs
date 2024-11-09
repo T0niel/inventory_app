@@ -14,10 +14,12 @@
     <title>Inventory App</title>
   </head>
   <body>
-    <%- include('partials/nav.ejs', { links: [{ link: '/inventory/createItem',
-    text: 'Create item' }, { link: '/inventory/createCategory', text: 'Create category'
-    }] }) %> <% if (locals.categories) { %> <%-
-    include('partials/categories.ejs', { categories: locals.categories, selected: locals.selected}) %> <% } %>
+    <%- include('partials/filledNav.ejs', {}) %> 
+    
+    <% if (locals.categories) { %> <%-
+        include('partials/categories.ejs', { categories: locals.categories, selected: locals.selected}) %> 
+      <% } 
+    %>
 
     <div class="items-container">
       <% if (locals.items && locals.items.length > 0) { %> <%

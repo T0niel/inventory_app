@@ -386,3 +386,16 @@ input[type="file"]::file-selector-button:active {
 .delete{
   background-color: crimson;
 }
+
+.flex{
+  display: flex;
+  gap: .2rem;
+  align-items: center;
+}
+
+.minus-btn{
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  height: min-content;
+}

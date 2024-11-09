@@ -14,9 +14,7 @@
     <title>Create</title>
   </head>
   <body>
-    <%- include('partials/nav.ejs', { links: [{ link: '/', text: 'Home' }, {
-    link: '/inventory/createItem', text: 'Create item' }, { link:
-    '/inventory/createCategory', text: 'Create category', }] }) %>
+    <%- include('partials/filledNav.ejs') %>
     <h1 class="create-item-header">Create item</h1>
     <form
       action="/inventory/createItem"

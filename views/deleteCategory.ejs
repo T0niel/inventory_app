@@ -16,13 +16,13 @@
   <body>
     <%- include('partials/filledNav.ejs', {}) %> 
 
-    <form action="/inventory/delete/<%= locals.id %>" method="post">
+    <form action="/category/delete" method="post">
       <div class="inputs">
         <div class="input-wrapper">
           <label for="password">Admin Password:*</label>
           <input type="password" name="password" id="password" />
         </div>
-
+        <input type="category" name="category" value="<%= locals.category %>" style="display: none;">
         <div class="input-wrapper">
           <ul class="error-list">
             <% if(locals.errors){ locals.errors.forEach((error) => {%>

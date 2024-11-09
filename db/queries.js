@@ -202,11 +202,20 @@ async function deleteCarPart(id) {
   return rows;
 }
 
+async function deleteCategoryByName(name){
+  const query = `DELETE FROM car_part_categories WHERE category_name = $1`;
+
+  const {rows} = await pool.query(query, [name]);
+  return rows;
+}
+
 module.exports = {
   getCategories,
   getItemsByCategory,
   insertItem,
   deleteCarPart,
   getItemById,
-  deleteImageById
+  deleteImageById,
+  deleteCategoryByName,
+  insertCarPartCategory
 };
