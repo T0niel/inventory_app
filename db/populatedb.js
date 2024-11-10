@@ -83,5 +83,3 @@ async function init() {
 }
 
 init();
-
-// node db/populatedb.js postgres://user:pass@localhost:5432/dbName
