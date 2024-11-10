@@ -254,7 +254,6 @@ async function getItemDetails(req, res) {
     const id = req.params.id;
     const item = await getItemById(id);
     const producer = await getProducerById(item.car_part_producer_id);
-    console.log({...item, ...producer});
     res.render('viewDetails', { item: { ...item, ...producer } });
   } catch (e) {
     throw new HttpError('Internal server error', 500);
