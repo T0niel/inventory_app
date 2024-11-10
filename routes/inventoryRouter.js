@@ -6,6 +6,7 @@ const {
   getDeleteForm,
   editItem,
   getEditItemForm,
+  getItemDetails,
 } = require('../controllers/inventoryController');
 const router = Router();
 
@@ -16,6 +17,8 @@ router.get('/delete/:id', getDeleteForm);
 router.post('/delete/:id', deleteItem);
 
 router.get('/edit/:id', getEditItemForm);
-router.post('/edit/:id', editItem)
+router.post('/edit/:id', editItem);
+
+router.get('/details/:id', getItemDetails);
 
 module.exports = router;

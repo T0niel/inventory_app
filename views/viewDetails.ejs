@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Details</title>
+  </head>
+  <body>
+    <%- include('partials/filledNav.ejs', {}) %>
+
+    <div class="details-container">
+      <div class="details-image-container">
+        <img src="/images/<%=item.directory%>" alt="<%=item.part_name%>" />
+      </div>
+      <div class="details-wrapper">
+        <table>
+          <tr>
+            <th>Part name</th>
+            <td><%=item.part_name%></td>
+          </tr>
+          <tr>
+            <th>Production date</th>
+            <td>
+              <%=new
+              Date(item.production_date).toLocaleDateString('en-GB').replace(/\//g,
+              '/')%>
+            </td>
+          </tr>
+          <tr>
+            <th>Company name</th>
+            <td><%=item.company_name%></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td><%=item.price%>€</td>
+          </tr>
+          <tr>
+            <th>Category</th>
+            <td><%=item.category_name%></td>
+          </tr>
+          <% if(item.description){%>
+          <tr>
+            <th colspan="2">Description</th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <%=item.description%>
+            </td>
+          </tr>
+          <%} %>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

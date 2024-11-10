@@ -187,55 +187,84 @@ const deleteItemSchemaInput = [
 
 //edit logic
 async function getEditItemForm(req, res) {
-  const category = req.query.category;
-  const id = req.params.id;
-  const item = await getItemById(id);
-  const producer = await getProducerById(item.car_part_producer_id);
-  const categories = await getCategories();
-  res.render('update', { item: {...item, ...producer}, selected: category, categories });
-}
-
-async function validateEditItem(req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    if (req.file?.filename) {
-      await fs.rm(path.join(uploadDir, req.file.filename));
-    }
+  try {
     const category = req.query.category;
     const id = req.params.id;
     const item = await getItemById(id);
     const producer = await getProducerById(item.car_part_producer_id);
-
     const categories = await getCategories();
-
-    return res.render('update', {
+    res.render('update', {
       item: { ...item, ...producer },
-      categories,
       selected: category,
-      errors: errors.array(),
+      categories,
     });
+  } catch (e) {
+    throw new HttpError('Internal server error', 500);
+  }
+}
+
+async function validateEditItem(req, res, next) {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      if (req.file?.filename) {
+        await fs.rm(path.join(uploadDir, req.file.filename));
+      }
+      const category = req.query.category;
+      const id = req.params.id;
+      const item = await getItemById(id);
+      const producer = await getProducerById(item.car_part_producer_id);
+
+      const categories = await getCategories();
+
+      return res.render('update', {
+        item: { ...item, ...producer },
+        categories,
+        selected: category,
+        errors: errors.array(),
+      });
+    }
+  } catch (e) {
+    throw new HttpError('Internal server error', 500);
   }
 
   next();
 }
 
 async function updateItem(req, res) {
-  const id = req.params.id;
-  //delete the old image file
-  const item = await getItemById(id);
-  if(item.directory){
-    await fs.rm(path.join(uploadDir, path.basename(item.directory)));
+  try {
+    const id = req.params.id;
+    //delete the old image file
+    const item = await getItemById(id);
+    if (item.directory) {
+      await fs.rm(path.join(uploadDir, path.basename(item.directory)));
+    }
+    await updateCarPart(id, {
+      ...req.body,
+      imgDir: path.join('uploads', req.file.filename),
+    });
+    res.redirect('/');
+  } catch (e) {
+    throw new HttpError('Internal server error', 500);
   }
-  await updateCarPart(id, {
-    ...req.body,
-    imgDir: path.join('uploads', req.file.filename),
-  });
-  res.redirect('/');
+}
+
+async function getItemDetails(req, res) {
+  try {
+    const id = req.params.id;
+    const item = await getItemById(id);
+    const producer = await getProducerById(item.car_part_producer_id);
+    console.log({...item, ...producer});
+    res.render('viewDetails', { item: { ...item, ...producer } });
+  } catch (e) {
+    throw new HttpError('Internal server error', 500);
+  }
 }
 
 module.exports = {
   getCreateForm,
   getEditItemForm,
+  getItemDetails,
   getDeleteForm,
   createItem: [
     upload.single('file'),
