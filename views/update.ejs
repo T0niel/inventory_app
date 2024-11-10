@@ -30,7 +30,8 @@
             <li
               class="categories-item <%= locals.selected && locals.selected === category ? 'selected-category-item' : '' %>"
             >
-              <a href="/inventory/createItem/?category=<%=category%>"
+              <a
+                href="/inventory/edit/<%=item.car_part_id%>/?category=<%=category%>"
                 ><%= category %></a
               >
             </li>
@@ -78,15 +79,15 @@
         <div class="input-wrapper">
           <label for="price">Company:*</label>
           <select name="company" id="company">
-            <option value="Bmw">BMW</option>
-            <option value="Mercedes-benz">Mercedes-Benz</option>
-            <option value="Toyota">Toyota</option>
-            <option value="Ford">Ford</option>
-            <option value="Bosch">Bosch</option>
-            <option value="Continental">Continental</option>
-            <option value="Denso">Denso</option>
-            <option value="General-motors">General Motors</option>
-            <option value="Other">Other</option>
+            <option value="Bmw" <%= item.company_name.toLowerCase() === 'bmw' ? 'selected' : '' %>>BMW</option>
+            <option value="Mercedes-benz" <%= item.company_name.toLowerCase() === 'mercedes-benz' ? 'selected' : '' %>>Mercedes-Benz</option>
+            <option value="Toyota" <%= item.company_name.toLowerCase() === 'toyota' ? 'selected' : '' %>>Toyota</option>
+            <option value="Ford" <%= item.company_name.toLowerCase() === 'ford' ? 'selected' : '' %>>Ford</option>
+            <option value="Bosch" <%= item.company_name.toLowerCase() === 'bosch' ? 'selected' : '' %>>Bosch</option>
+            <option value="Continental" <%= item.company_name.toLowerCase() === 'continental' ? 'selected' : '' %>>Continental</option>
+            <option value="Denso" <%= item.company_name.toLowerCase() === 'denso' ? 'selected' : '' %>>Denso</option>
+            <option value="General-motors" <%= item.company_name.toLowerCase() === 'general-motors' ? 'selected' : '' %>>General Motors</option>
+            <option value="Other" <%= item.company_name.toLowerCase() === 'other' ? 'selected' : '' %>>Other</option>
           </select>
         </div>
         <div class="input-wrapper">
@@ -107,7 +108,9 @@
             placeholder="description"
             spellcheck="true"
             class="description"
-          ><%=item.description%></textarea>
+          >
+<%=item.description%></textarea
+          >
         </div>
         <div class="input-wrapper">
           <ul class="error-list">

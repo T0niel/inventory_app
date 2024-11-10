@@ -1,9 +1,9 @@
-const {Client} = require('pg');
+const { Client } = require('pg');
 const connectionString = process.argv[2];
 
 const client = new Client({
-    connectionString
-})
+  connectionString,
+});
 
 const SQL = `
         CREATE TABLE IF NOT EXISTS
@@ -61,14 +61,25 @@ const SQL = `
         ('Cooling System'),
         ('Interior'),
         ('Exterior');
+
+        INSERT INTO 
+        car_part_producers (company_name)
+        VALUES
+        ('BMW'),
+        ('Toyota'),
+        ('Bosch'),
+        ('Continental'),
+        ('Denso'),
+        ('General-motors'),
+        ('Other')
 `;
 
-async function init(){
-    console.log('seeding...');
-    await client.connect();
-    await client.query(SQL);
-    await client.end();
-    console.log('populated database.');
+async function init() {
+  console.log('seeding...');
+  await client.connect();
+  await client.query(SQL);
+  await client.end();
+  console.log('populated database.');
 }
 
 init();

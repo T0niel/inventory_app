@@ -4,6 +4,8 @@ const {
   deleteCarPart,
   getItemById,
   deleteImageById,
+  updateCarPart,
+  getProducerById,
 } = require('../db/queries');
 const { body, validationResult } = require('express-validator');
 const HttpError = require('../errors/httpError');
@@ -11,7 +13,6 @@ const isAdmin = require('../middlewares/isAdmin');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs/promises');
-
 
 //Create item functionality
 async function getCreateForm(req, res) {
@@ -62,27 +63,23 @@ async function validateItem(req, res, next) {
 }
 
 async function createItem(req, res) {
-  try {
-    const now = new Date();
-    const data = req.body;
-    const { name, date, price, company, category, description, imgDir } = {
-      ...data,
-      imgDir: path.join('uploads', req.file.filename),
-    };
-    await insertItem(
-      name,
-      date,
-      price,
-      company,
-      imgDir,
-      now,
-      category,
-      description
-    );
-    res.redirect('/');
-  } catch (e) {
-    throw new HttpError('Internal server error', 500);
-  }
+  const now = new Date();
+  const data = req.body;
+  const { name, date, price, company, category, description, imgDir } = {
+    ...data,
+    imgDir: path.join('uploads', req.file.filename),
+  };
+  await insertItem(
+    name,
+    date,
+    price,
+    company,
+    imgDir,
+    now,
+    category,
+    description
+  );
+  res.redirect('/');
 }
 
 const uploadDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
@@ -107,11 +104,11 @@ const itemSchemaInput = [
       throw new Error('File is required');
     }
 
-    const allowedTypes = ['jpeg', 'png', 'bmp', 'webp'];
+    const allowedTypes = ['jpeg', 'png', 'bmp', 'webp', 'jpg'];
 
     if (!allowedTypes.includes(req.file.originalname.split('.')[1])) {
       throw new Error(
-        'Invalid file type. Only JPEG, PNG, BMP, and WEBP are allowed.'
+        'Invalid file type. Only JPEG, PNG, BMP, JPG, and WEBP are allowed.'
       );
     }
 
@@ -150,18 +147,14 @@ const itemSchemaInput = [
 
 //Delete item functionality
 async function deleteItem(req, res) {
-  try {
-    const id = req.params.id;
-    const item = await getItemById(id);
-    await deleteCarPart(id);
-    await deleteImageById(id);
-    await fs.rm(path.join(uploadDir, path.basename(item.directory)), {
-      force: true,
-    });
-    res.redirect('/');
-  } catch (e) {
-    throw new HttpError('Internal server error', 500);
-  }
+  const id = req.params.id;
+  const item = await getItemById(id);
+  await deleteCarPart(id);
+  await deleteImageById(id);
+  await fs.rm(path.join(uploadDir, path.basename(item.directory)), {
+    force: true,
+  });
+  res.redirect('/');
 }
 
 async function validateDeleteItem(req, res, next) {
@@ -192,8 +185,58 @@ const deleteItemSchemaInput = [
     .escape(),
 ];
 
+//edit logic
+async function getEditItemForm(req, res) {
+  const category = req.query.category;
+  const id = req.params.id;
+  const item = await getItemById(id);
+  const producer = await getProducerById(item.car_part_producer_id);
+  const categories = await getCategories();
+  res.render('update', { item: {...item, ...producer}, selected: category, categories });
+}
+
+async function validateEditItem(req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    if (req.file?.filename) {
+      await fs.rm(path.join(uploadDir, req.file.filename));
+    }
+    const category = req.query.category;
+    const id = req.params.id;
+    const item = await getItemById(id);
+    const producer = await getProducerById(item.car_part_producer_id);
+
+    const categories = await getCategories();
+
+    return res.render('update', {
+      item: { ...item, ...producer },
+      categories,
+      selected: category,
+      errors: errors.array(),
+    });
+  }
+
+  next();
+}
+
+async function updateItem(req, res) {
+  const id = req.params.id;
+  //delete the old image file
+  const item = await getItemById(id);
+  if(item.directory){
+    await fs.rm(path.join(uploadDir, path.basename(item.directory)));
+  }
+  await updateCarPart(id, {
+    ...req.body,
+    imgDir: path.join('uploads', req.file.filename),
+  });
+  res.redirect('/');
+}
+
 module.exports = {
   getCreateForm,
+  getEditItemForm,
+  getDeleteForm,
   createItem: [
     upload.single('file'),
     itemSchemaInput,
@@ -201,6 +244,12 @@ module.exports = {
     isAdmin,
     createItem,
   ],
+  editItem: [
+    upload.single('file'),
+    itemSchemaInput,
+    validateEditItem,
+    isAdmin,
+    updateItem,
+  ],
   deleteItem: [deleteItemSchemaInput, validateDeleteItem, isAdmin, deleteItem],
-  getDeleteForm,
 };

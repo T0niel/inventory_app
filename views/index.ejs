@@ -23,7 +23,7 @@
 
     <div class="items-container">
       <% if (locals.items && locals.items.length > 0) { %> <%
-      locals.items.forEach(({ part_name, description, directory, id }) => { %>
+      locals.items.forEach(({ part_name, description, directory, id, category_name }) => { %>
       <div class="item">
         <div class="item-img-container">
           <img src="<%= directory %>" alt="item" />
@@ -38,7 +38,7 @@
               </a>
             </div>
             <div class="icon-wrapper">
-              <a href="/inventory/edit/<%=id%>">
+              <a href="/inventory/edit/<%=id%>?category=<%=category_name%>">
                 <img src="images/icons/edit-button.png" alt="edit" />
               </a>
             </div>
