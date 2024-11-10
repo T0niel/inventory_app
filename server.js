@@ -19,18 +19,18 @@ app.use('/', indexRouter);
 app.use('/inventory', inventoryRouter);
 app.use('/category', categoriesRouter);
 
-// app.use('/', (req, res) => {
-//     throw new httpError('page not found', 404);
-// })
+app.use('/', (req, res) => {
+    throw new httpError('page not found', 404);
+})
 
-// app.use((err, req, res, next) => {
-//     let {status, message} = err;
-//     if(!status){
-//         status = 500;
-//         message = 'Internal server error';
-//     }
-//     res.render('error', {status, error: message})
-// })
+app.use((err, req, res, next) => {
+    let {status, message} = err;
+    if(!status){
+        status = 500;
+        message = 'Internal server error';
+    }
+    res.render('error', {status, error: message})
+})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
