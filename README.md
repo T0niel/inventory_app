@@ -27,7 +27,7 @@ Create .env at the root of the project
 
 - Provide port
 - Database url
-- And your admin pass
+- And your admin pass (create your own)
 
 ## Make sure you change this with your information
 
