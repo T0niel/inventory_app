@@ -14,8 +14,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs/promises');
 
-//Create item functionality
-async function getCreateForm(req, res) {
+// Create item functionality
+async function getCreateForm(req, res, next) {
   try {
     let { category } = req.query;
     const categories = await getCategories();
@@ -30,14 +30,14 @@ async function getCreateForm(req, res) {
 
     res.render('createItem', { categories, selected: category });
   } catch (e) {
-    throw new HttpError('Internal server error', 500);
+    next(new HttpError('Internal server error', 500));
   }
 }
 
 async function validateItem(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    //delete the image in case the form was invalid
+    // delete the image in case the form was invalid
     if (req.file?.filename) {
       await fs.rm(path.join(uploadDir, req.file.filename));
     }
@@ -62,24 +62,28 @@ async function validateItem(req, res, next) {
   next();
 }
 
-async function createItem(req, res) {
+async function createItem(req, res, next) {
   const now = new Date();
   const data = req.body;
   const { name, date, price, company, category, description, imgDir } = {
     ...data,
     imgDir: path.join('uploads', req.file.filename),
   };
-  await insertItem(
-    name,
-    date,
-    price,
-    company,
-    imgDir,
-    now,
-    category,
-    description
-  );
-  res.redirect('/');
+  try {
+    await insertItem(
+      name,
+      date,
+      price,
+      company,
+      imgDir,
+      now,
+      category,
+      description
+    );
+    res.redirect('/');
+  } catch (e) {
+    next(new HttpError('Internal server error', 500));
+  }
 }
 
 const uploadDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
@@ -145,16 +149,20 @@ const itemSchemaInput = [
   body('descrition').optional({ values: 'falsy' }),
 ];
 
-//Delete item functionality
-async function deleteItem(req, res) {
+// Delete item functionality
+async function deleteItem(req, res, next) {
   const id = req.params.id;
-  const item = await getItemById(id);
-  await deleteCarPart(id);
-  await deleteImageById(id);
-  await fs.rm(path.join(uploadDir, path.basename(item.directory)), {
-    force: true,
-  });
-  res.redirect('/');
+  try {
+    const item = await getItemById(id);
+    await deleteCarPart(id);
+    await deleteImageById(id);
+    await fs.rm(path.join(uploadDir, path.basename(item.directory)), {
+      force: true,
+    });
+    res.redirect('/');
+  } catch (e) {
+    next(new HttpError('Internal server error', 500));
+  }
 }
 
 async function validateDeleteItem(req, res, next) {
@@ -185,8 +193,8 @@ const deleteItemSchemaInput = [
     .escape(),
 ];
 
-//edit logic
-async function getEditItemForm(req, res) {
+// Edit logic
+async function getEditItemForm(req, res, next) {
   try {
     const category = req.query.category;
     const id = req.params.id;
@@ -199,7 +207,7 @@ async function getEditItemForm(req, res) {
       categories,
     });
   } catch (e) {
-    throw new HttpError('Internal server error', 500);
+    next(new HttpError('Internal server error', 500));
   }
 }
 
@@ -225,16 +233,16 @@ async function validateEditItem(req, res, next) {
       });
     }
   } catch (e) {
-    throw new HttpError('Internal server error', 500);
+    next(new HttpError('Internal server error', 500));
   }
 
   next();
 }
 
-async function updateItem(req, res) {
+async function updateItem(req, res, next) {
   try {
     const id = req.params.id;
-    //delete the old image file
+    // delete the old image file
     const item = await getItemById(id);
     if (item.directory) {
       await fs.rm(path.join(uploadDir, path.basename(item.directory)));
@@ -245,18 +253,18 @@ async function updateItem(req, res) {
     });
     res.redirect('/');
   } catch (e) {
-    throw new HttpError('Internal server error', 500);
+    next(new HttpError('Internal server error', 500));
   }
 }
 
-async function getItemDetails(req, res) {
+async function getItemDetails(req, res, next) {
   try {
     const id = req.params.id;
     const item = await getItemById(id);
     const producer = await getProducerById(item.car_part_producer_id);
     res.render('viewDetails', { item: { ...item, ...producer } });
   } catch (e) {
-    throw new HttpError('Internal server error', 500);
+    next(new HttpError('Internal server error', 500));
   }
 }
 

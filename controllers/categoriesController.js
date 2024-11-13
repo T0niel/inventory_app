@@ -12,14 +12,14 @@ async function getManageCategories(req, res) {
   res.render('manageCategories', { categories });
 }
 
-//Create logic
-async function createCategory(req, res) {
+// Create logic
+async function createCategory(req, res, next) {
   try {
     const category = req.body.name;
     await insertCarPartCategory(category);
     res.redirect('/');
   } catch (e) {
-    throw new HttpError('Internal server error', 500);
+    next(new HttpError('Internal server error', 500));
   }
 }
 
@@ -46,25 +46,25 @@ const createCategorySchemaInput = [
     .withMessage('Category name must only contain characters'),
   body('password')
     .notEmpty()
-    .withMessage('the admin authentication is required')
+    .withMessage('The admin authentication is required')
     .matches(process.env.ADMIN_PASSWORD)
     .withMessage('Invalid password')
     .escape(),
 ];
 
-//Delete logic
+// Delete logic
 async function getDeleteCategory(req, res) {
   const category = req.query.category;
   res.render('deleteCategory', { category });
 }
 
-async function deleteCategory(req, res) {
+async function deleteCategory(req, res, next) {
   try {
     const category = req.body.category;
     await deleteCategoryByName(category);
     res.redirect('/');
   } catch (e) {
-    throw new HttpError('Internal server error', 500);
+    next(new HttpError('Internal server error', 500));
   }
 }
 
@@ -84,7 +84,7 @@ async function validateDeleteCategory(req, res, next) {
 const deleteCategorySchemaInput = [
   body('password')
     .notEmpty()
-    .withMessage('the admin authentication is required')
+    .withMessage('The admin authentication is required')
     .matches(process.env.ADMIN_PASSWORD)
     .withMessage('Invalid password')
     .escape(),
